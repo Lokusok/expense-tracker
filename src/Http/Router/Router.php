@@ -6,25 +6,33 @@ namespace App\Http\Router;
 
 class Router
 {
-  private array $routes = [];
+  private array $routes = [
+    'get' => [],
+    'post' => []
+  ];
 
-  public function get(string $path, callable $fn)
+  public function get(string $path, callable|array $fn): void
   {
-    $this->routes[$path] = $fn;
+    $this->routes['get'][$path] = $fn;
   }
 
-  public function resolve(string $path)
+  public function post(string $path, callable|array $fn): void
+  {
+    $this->routes['post'][$path] = $fn;
+  }
+
+  public function resolve(string $path, string $method): void
   {
     $isCss = str_ends_with($path, ".css");
-    
+
     if ($isCss) {
       header("Content-Type: text/css;");
       echo file_get_contents(ASSETS_PATH . "/css/style.css");
       return;
     }
 
-    if (isset($this->routes[$path])) {
-      call_user_func($this->routes[$path]);
+    if (isset($this->routes[$method][$path])) {
+      call_user_func($this->routes[$method][$path]);
     }
   }
 }

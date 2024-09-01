@@ -14,7 +14,7 @@ class View
       }
     }
 
-    $filename = str_ends_with($path, ".php") ? $path : $path . ".php";
+    $filename = str_ends_with($path, ".php") ? $path : $path . ".view.php";
 
     $fullPath = ASSETS_PATH . "/" . $filename;
     require $fullPath;

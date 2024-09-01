@@ -7,13 +7,84 @@
 
   <link rel="stylesheet" href="/style.css" >
   
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css"
+  />
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-  <header>
-    <nav class="nav">
-      <a class="nav__link" href="/">Home</a>
-      <a class="nav__link" href="/about">About</a>
-    </nav>
-  </header>
+  <div
+    class="sidebar fixed top-0 bottom-0 lg:left-0 p-2 w-[200px] overflow-y-auto text-center bg-gray-900"
+  >
+      <div class="text-gray-100 text-xl">
+        <div class="p-2.5 mt-1 flex items-center">
+          <i class="bi bi-app-indicator px-2 py-1 rounded-md bg-blue-600"></i>
+          <h1 class="font-bold text-gray-200 text-[15px] ml-3">Tracker</h1>
+          <i
+            class="bi bi-x cursor-pointer ml-28 lg:hidden"
+            onclick="openSidebar()"
+          ></i>
+        </div>
+        <div class="my-2 bg-gray-600 h-[1px]"></div>
+      </div>
+      <div
+        class="p-2.5 flex items-center rounded-md px-4 duration-300 cursor-pointer bg-gray-700 text-white"
+      >
+        <i class="bi bi-search text-sm"></i>
+        <input
+          type="text"
+          placeholder="Search"
+          class="text-[15px] ml-4 w-full bg-transparent focus:outline-none"
+        />
+      </div>
+      <div
+        class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
+      >
+        <i class="bi bi-house-door-fill"></i>
+        <span class="text-[15px] ml-4 text-gray-200 font-bold">Главная</span>
+      </div>
+      <div
+        class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
+      >
+        <i class="bi bi-bookmark-fill"></i>
+        <span class="text-[15px] ml-4 text-gray-200 font-bold">Расходы</span>
+      </div>
+      <div class="my-4 bg-gray-600 h-[1px]"></div>
+      
+      <a
+        href="/login"
+        class="
+          p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white
+          <?php if (isUrlEqual("/login")): ?>
+            bg-blue-600 text-white
+          <?php endif ?>
+        "
+      >
+        <i class="bi bi-person-square"></i>
+        <span class="text-[15px] ml-4 text-gray-200 font-bold">Вход</span>
+      </a>
+
+      <a
+        href="/register"
+        class="
+          p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white
+          <?php if (isUrlEqual("/register")): ?>
+            bg-blue-600 text-white
+          <?php endif ?>
+        "
+      >
+        <i class="bi bi-door-open"></i>
+        <span class="text-[15px] ml-4 text-gray-200 font-bold">Регистрация</span>
+      </a>
+
+      <div
+        class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
+      >
+        <i class="bi bi-box-arrow-in-right"></i>
+        <span class="text-[15px] ml-4 text-gray-200 font-bold">Выход</span>
+      </div>
+    </div>
+
+    <div class="pl-[200px]">

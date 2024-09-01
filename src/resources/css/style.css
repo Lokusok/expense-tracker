@@ -1,8 +1,1 @@
-body {
-  background: #111;
-  color: #fff;
-}
-
-.nav__link {
-  color: #fff;
-}
+[x-cloak] { display: none !important; }
