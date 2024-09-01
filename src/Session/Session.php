@@ -25,6 +25,16 @@ class Session
 
   public static function logout()
   {
-    dd("[SESSIOn] LOGOUT");
+    $params = session_get_cookie_params();
+
+    setcookie(
+      session_name(), '', time() - 100,
+      $params['path'], $params['domain'],
+      $params['secure'], $params['httponly']
+    );
+    
+    session_destroy();
+
+    return redirect("/");
   }
 }

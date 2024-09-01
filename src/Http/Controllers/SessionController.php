@@ -61,4 +61,13 @@ class SessionController
 
     redirect("/");
   }
+
+  public static function logout()
+  {
+    if (! Session::isAuth()) {
+      return redirect("/");
+    }
+
+    Session::logout();
+  }
 }

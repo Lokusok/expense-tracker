@@ -8,7 +8,8 @@ class Router
 {
   private array $routes = [
     'get' => [],
-    'post' => []
+    'post' => [],
+    'delete' => [],
   ];
 
   public function get(string $path, callable|array $fn): void
@@ -19,6 +20,11 @@ class Router
   public function post(string $path, callable|array $fn): void
   {
     $this->routes['post'][$path] = $fn;
+  }
+
+  public function delete(string $path, callable|array $fn): void
+  {
+    $this->routes['delete'][$path] = $fn;
   }
 
   public function resolve(string $path, string $method): void
