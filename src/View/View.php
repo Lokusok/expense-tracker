@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\View;
 
+use App\Session\Session;
+
 class View
 {
   public static function make(string $path, ?array $attrs = null): void

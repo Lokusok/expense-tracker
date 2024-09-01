@@ -32,15 +32,18 @@
   <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
     <form
       class="space-y-6"
-      action="#"
+      action="/login"
       method="POST"
       autocomplete="off"
 
       x-data="{
-        email: '',
+        email: '<?= getFlushMessage('old_login_email') ?>',
         password: '',
 
-        errors: {},
+        errors: {
+          email: '<?= getFlushMessage('error_login_email') ?>',
+          password: '<?= getFlushMessage('error_login_password') ?>'
+        },
 
         checkEmail() {
           if (!this.email) {

@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Session\Session;
+
 /**
  * Функция для подключения компонента внутри вьюх
  */
@@ -47,4 +49,18 @@ function clearFlushMessages(array $names): void {
       unset($_SESSION['flush'][$name]);
     }
   }
+}
+
+/**
+ * Нормализация приходящих данных с фронта
+ */
+function normalize(string $data): string {
+  return trim(htmlspecialchars($data));
+}
+
+/**
+ * Авторизован ли пользователь
+ */
+function isAuth(): bool {
+  return Session::isAuth();
 }

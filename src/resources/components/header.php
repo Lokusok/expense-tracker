@@ -62,34 +62,38 @@
 
       <div class="my-4 bg-gray-600 h-[1px]"></div>
       
-      <a
-        href="/login"
-        class="
-          p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white
-          <?= isUrlEqual("/login") ? 'bg-blue-600 text-white' : '' ?>
-        "
-      >
-        <i class="bi bi-person-square"></i>
-        <span class="text-[15px] ml-4 text-gray-200 font-bold">Вход</span>
-      </a>
+      <?php if(! isAuth()): ?>
+        <a
+          href="/login"
+          class="
+            p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white
+            <?= isUrlEqual("/login") ? 'bg-blue-600 text-white' : '' ?>
+          "
+        >
+          <i class="bi bi-person-square"></i>
+          <span class="text-[15px] ml-4 text-gray-200 font-bold">Вход</span>
+        </a>
 
-      <a
-        href="/register"
-        class="
-          p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white
-          <?= isUrlEqual("/register") ? 'bg-blue-600 text-white' : '' ?>
-        "
-      >
-        <i class="bi bi-door-open"></i>
-        <span class="text-[15px] ml-4 text-gray-200 font-bold">Регистрация</span>
-      </a>
+        <a
+          href="/register"
+          class="
+            p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white
+            <?= isUrlEqual("/register") ? 'bg-blue-600 text-white' : '' ?>
+          "
+        >
+          <i class="bi bi-door-open"></i>
+          <span class="text-[15px] ml-4 text-gray-200 font-bold">Регистрация</span>
+        </a>
+      <?php endif ?>
 
-      <div
-        class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
-      >
-        <i class="bi bi-box-arrow-in-right"></i>
-        <span class="text-[15px] ml-4 text-gray-200 font-bold">Выход</span>
-      </div>
+      <?php if (isAuth()): ?>
+        <div
+          class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
+        >
+          <i class="bi bi-box-arrow-in-right"></i>
+          <span class="text-[15px] ml-4 text-gray-200 font-bold">Выход</span>
+        </div>
+      <?php endif ?>
     </div>
 
     <div class="pl-[200px]">

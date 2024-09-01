@@ -39,15 +39,15 @@
       autocomplete="off"
 
       x-data="{
-        email: '<?= getFlushMessage('old_email') ?>',
-        username: '<?= getFlushMessage('old_username') ?>',
+        email: '<?= getFlushMessage('old_register_email') ?>',
+        username: '<?= getFlushMessage('old_register_username') ?>',
         password: '',
         passwordConfirm: '',
 
         errors: {
-          email: '<?= getFlushMessage('error_email') ?>',
-          username: '<?= getFlushMessage('error_username') ?>',
-          password: '<?= getFlushMessage('error_password') ?>',
+          email: '<?= getFlushMessage('error_register_email') ?>',
+          username: '<?= getFlushMessage('error_register_username') ?>',
+          password: '<?= getFlushMessage('error_register_password') ?>',
         },
 
         checkUsername() {

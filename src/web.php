@@ -6,16 +6,14 @@ require __DIR__ . "/functions.php";
 
 use App\Http\Router\Router;
 use App\View\View;
+
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\IndexController;
 
 $router = new Router();
 
-$router->get("/", function() {
-  View::make("index", [
-    "description" => "Lorem ipsum"
-  ]);
-});
+$router->get("/", [IndexController::class, 'index']);
 
 $router->get("/about", function() {
   View::make("about");
@@ -23,6 +21,8 @@ $router->get("/about", function() {
 
 
 $router->get("/login", [SessionController::class, 'index']);
+$router->post("/login", [SessionController::class, 'login']);
+
 $router->get("/register", [RegisterController::class, 'index']);
 $router->post("/register", [RegisterController::class, 'store']);
 

@@ -5,28 +5,41 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\View\View;
+use App\Http\Models\User;
+use App\Session\Session;
 
 class RegisterController
 {
   public static function index()
   {
+    clearFlushMessages([
+      'old_login_email',
+      'error_login_email',
+      'error_login_password'
+    ]);
+
+    if (Session::isAuth()) {
+      redirect("/");
+      return;
+    }
+
     View::make("auth/register");
   }
 
   public static function store()
   {
-    $email = $_POST['email'];
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-    $passwordConfirmation = $_POST['password_confirmation'];
+    $email = normalize($_POST['email']);
+    $username = normalize($_POST['username']);
+    $password = normalize($_POST['password']);
+    $passwordConfirmation = normalize($_POST['password_confirmation']);
 
     $isEmailValid = filter_var($email, FILTER_VALIDATE_EMAIL);
 
     if (! $isEmailValid) {
       setFlushMessages([
-        'old_email' => $email,
-        'old_username' => $username,
-        'error_email' => 'Неккоректная почта',
+        'old_register_email' => $email,
+        'old_register_username' => $username,
+        'error_register_email' => 'Неккоректная почта',
       ]);
 
       redirect('/register');
@@ -37,9 +50,9 @@ class RegisterController
 
     if ($isUsernameSmall) {
       setFlushMessages([
-        'old_email' => $email,
-        'old_username' => $username,
-        'error_username' => 'Имя должно быть больше 5 символов!'
+        'old_register_email' => $email,
+        'old_register_username' => $username,
+        'error_register_username' => 'Имя должно быть больше 5 символов!'
       ]);
 
       redirect('/register');
@@ -50,9 +63,9 @@ class RegisterController
 
     if ($isPasswordSmall) {
       setFlushMessages([
-        'old_email' => $email,
-        'old_username' => $username,
-        'error_password' => 'Пароль должен быть сложнее (от 7 символов)'
+        'old_register_email' => $email,
+        'old_register_username' => $username,
+        'error_register_password' => 'Пароль должен быть сложнее (от 7 символов)'
       ]);
 
       redirect('/register');
@@ -63,44 +76,34 @@ class RegisterController
 
     if ($isPasswordsEquals !== 0) {
       setFlushMessages([
-        'old_email' => $email,
-        'old_username' => $username,
-        'error_password' => 'Пароли не равны'
+        'old_register_email' => $email,
+        'old_register_username' => $username,
+        'error_register_password' => 'Пароли не равны'
       ]);
 
       redirect('/register');
       return;
     }
 
-    $db = new \PDO("mysql:host=172.21.0.1;port=4422;dbname=full", "root", "");
+    $userId = User::create([
+      'email' => $email,
+      'full_name' => $username,
+      'password' => password_hash($password, PASSWORD_BCRYPT),
+      'avatar_url' => 'https://picsum.photos/200/300'
+    ]);
 
-    $db->beginTransaction();
-
-    try {
-      $statement = $db->prepare("INSERT INTO users (email, full_name, password, avatar_url) VALUES (:email, :full_name, :password, :avatar_url)");
-      $statement->execute([
-        ':email' => $email,
-        ':full_name' => $username,
-        ':password' => password_hash($password, PASSWORD_BCRYPT),
-        ':avatar_url' => 'https://fastly.picsum.photos/id/29/200/300'
+    if (gettype($userId) === "boolean") {
+      setFlushMessages([
+        'old_register_email' => $email,
+        'old_register_username' => $username,
+        'error_register_email' => 'Ошибка при создании пользователя',
+        'error_register_username' => 'Ошибка при создании пользователя'
       ]);
 
-      $id = $db->lastInsertId();
-
-      $db->commit();
-      
-      dd($id, 'OK');
+      redirect("/register");
       return;
-    } catch (\Exception $e) {
-      if ($db->inTransaction()) {
-        $db->rollBack();
-      }
     }
 
-    dd("All ok", [
-      'email' => $email,
-      'password' => $password,
-      'password_confirmation' => $passwordConfirmation
-    ]);
+    redirect("/login");
   }
 }
