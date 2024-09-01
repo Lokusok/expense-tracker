@@ -12,13 +12,13 @@ use App\Http\Controllers\RegisterController;
 $router = new Router();
 
 $router->get("/", function() {
-  View::make("index.view", [
+  View::make("index", [
     "description" => "Lorem ipsum"
   ]);
 });
 
 $router->get("/about", function() {
-  View::make("about.view");
+  View::make("about");
 });
 
 

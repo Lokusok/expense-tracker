@@ -22,3 +22,29 @@ function isUrlEqual(string $url): bool {
 function redirect(string $url): void {
   header("Location: " . $url);
 }
+
+/**
+ * Установка сообщений, которые должны исчезнуть
+ */
+function setFlushMessages(array $messages): void {
+  $_SESSION['flush'] = $messages;
+}
+
+/**
+ * Получить сообщение по имени
+ */
+function getFlushMessage(string $name): string {
+  $result = $_SESSION['flush'][$name] ?? '';
+  return $result;
+}
+
+/**
+ * Удалить сообщения по списку имён
+ */
+function clearFlushMessages(array $names): void {
+  foreach ($names as $name) {
+    if (isset($_SESSION['flush'][$name])) {
+      unset($_SESSION['flush'][$name]);
+    }
+  }
+}

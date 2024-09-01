@@ -39,27 +39,34 @@
           class="text-[15px] ml-4 w-full bg-transparent focus:outline-none"
         />
       </div>
-      <div
-        class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
+      <a
+        href="/"
+        class="
+          p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white
+          <?= isUrlEqual("/") ? 'bg-blue-600 text-white' : '' ?>
+        "
       >
         <i class="bi bi-house-door-fill"></i>
         <span class="text-[15px] ml-4 text-gray-200 font-bold">Главная</span>
-      </div>
-      <div
-        class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
+      </a>
+      <a
+        href="/about"
+        class="
+          p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white
+          <?= isUrlEqual("/about") ? 'bg-blue-600 text-white' : '' ?>
+        "
       >
         <i class="bi bi-bookmark-fill"></i>
-        <span class="text-[15px] ml-4 text-gray-200 font-bold">Расходы</span>
-      </div>
+        <span class="text-[15px] ml-4 text-gray-200 font-bold">О нас</span>
+      </a>
+
       <div class="my-4 bg-gray-600 h-[1px]"></div>
       
       <a
         href="/login"
         class="
           p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white
-          <?php if (isUrlEqual("/login")): ?>
-            bg-blue-600 text-white
-          <?php endif ?>
+          <?= isUrlEqual("/login") ? 'bg-blue-600 text-white' : '' ?>
         "
       >
         <i class="bi bi-person-square"></i>
@@ -70,9 +77,7 @@
         href="/register"
         class="
           p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white
-          <?php if (isUrlEqual("/register")): ?>
-            bg-blue-600 text-white
-          <?php endif ?>
+          <?= isUrlEqual("/register") ? 'bg-blue-600 text-white' : '' ?>
         "
       >
         <i class="bi bi-door-open"></i>

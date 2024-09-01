@@ -47,6 +47,9 @@ COPY . /var/www/html
 # https://github.com/docker-library/docs/tree/master/php#configuration
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 RUN a2enmod rewrite
+RUN apt-get update && apt-get install -y vim nano
+
+RUN docker-php-ext-install mysqli pdo pdo_mysql
 
 # Switch to a non-privileged user (defined in the base image) that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/

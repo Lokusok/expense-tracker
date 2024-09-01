@@ -10,6 +10,8 @@ class SessionController
 {
   public static function index()
   {
+    clearFlushMessages(['old_email', 'old_username', 'error_email', 'error_username', 'error_password']);
+
     View::make("auth/login");
   }
 }
