@@ -25,9 +25,10 @@ $router->get("/register", [RegisterController::class, 'index']);
 $router->post("/register", [RegisterController::class, 'store']);
 
 $method = $_SERVER["REQUEST_METHOD"];
+$url = explode("?", $_SERVER["REQUEST_URI"])[0];
 
 if (isset($_POST["_method"])) {
   $method = $_POST["_method"];
 }
 
-$router->resolve($_SERVER["REQUEST_URI"], strtolower($method));
+$router->resolve($url, strtolower($method));

@@ -14,8 +14,9 @@ function includeComponent(string $cmpName): void {
 /**
  * Проверка текущего урла
  */
-function isUrlEqual(string $url): bool {
-  return $_SERVER["REQUEST_URI"] === $url;
+function urlIs(string $url): bool {
+  $currentUrl = explode("?", $_SERVER["REQUEST_URI"])[0];
+  return $currentUrl === $url;
 }
 
 /**

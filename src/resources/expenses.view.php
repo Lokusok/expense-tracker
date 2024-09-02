@@ -1,15 +1,18 @@
 <?php includeComponent("header.php") ?>
 
 <div class="px-3" x-data="{
-  isModalOpen: false,
+  isModalOpen: '<?= $_GET['modalAddOpen'] ?? '' ?>' === 'true',
 
   openModal() {
     this.isModalOpen = true;
+    window.history.pushState({}, '', `?modalAddOpen=${this.isModalOpen}`);
   },
 
   closeModal() {
-    console.log('here');
     this.isModalOpen = false;
+
+    const urlWithoutQuery = window.location.href.split('?')[0];
+    window.history.pushState({}, '', urlWithoutQuery);
   }
 }">
   <div class="text-center text-[30px] font-bold my-4">

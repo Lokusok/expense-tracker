@@ -46,7 +46,7 @@
         href="/"
         class="
           p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white
-          <?= isUrlEqual("/") ? 'bg-blue-600 text-white' : '' ?>
+          <?= urlIs("/") ? 'bg-blue-600 text-white' : '' ?>
           <?= !isAuth() ? 'opacity-50 pointer-events-none' : ''  ?>
         "
       >
@@ -57,7 +57,7 @@
         href="/expenses"
         class="
           p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white
-          <?= isUrlEqual("/expenses") ? 'bg-blue-600 text-white' : '' ?>
+          <?= urlIs("/expenses") ? 'bg-blue-600 text-white' : '' ?>
           <?= !isAuth() ? 'opacity-50 pointer-events-none' : ''  ?>
         "
       >
@@ -72,7 +72,7 @@
           href="/login"
           class="
             p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white
-            <?= isUrlEqual("/login") ? 'bg-blue-600 text-white' : '' ?>
+            <?= urlIs("/login") ? 'bg-blue-600 text-white' : '' ?>
           "
         >
           <i class="bi bi-person-square"></i>
@@ -83,7 +83,7 @@
           href="/register"
           class="
             p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white
-            <?= isUrlEqual("/register") ? 'bg-blue-600 text-white' : '' ?>
+            <?= urlIs("/register") ? 'bg-blue-600 text-white' : '' ?>
           "
         >
           <i class="bi bi-door-open"></i>
