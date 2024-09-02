@@ -160,7 +160,7 @@
       <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
         <div @click.stop class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
           <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-            <form>
+            <form action="/expenses" method="POST">
               <div class="space-y-12">
                 <div class="border-b border-gray-900/10 pb-12">
                   <h2 class="text-base font-semibold leading-7 text-gray-900">
@@ -170,7 +170,7 @@
                     Информация будет сохранена и вы сможете обратиться к ней
                   </p>
 
-                  <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                  <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-6">
                     <div class="sm:col-span-4">
                       <label for="expense_title" class="block text-sm font-medium leading-6 text-gray-900">
                         Название расхода
@@ -184,6 +184,23 @@
                             autocomplete="expense_title"
                             class="px-2 block flex-1 border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                             placeholder="На покушоц...">
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="sm:col-span-4">
+                      <label for="expense_price" class="block text-sm font-medium leading-6 text-gray-900">
+                        Стоимость
+                      </label>
+                      <div class="mt-2">
+                        <div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                          <input
+                            type="text"
+                            name="expense_price"
+                            id="expense_price"
+                            autocomplete="expense_price"
+                            class="px-2 block flex-1 border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                            placeholder="500₽">
                         </div>
                       </div>
                     </div>
@@ -210,12 +227,11 @@
                       </label>
                       <div class="mt-2">
                         <select id="expense_category" name="expense_category" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
-                          <option>Питание</option>
-                          <option>Техника</option>
-                          <option>ЖКХ</option>
-                          <option>Здоровье</option>
-                          <option>Животные</option>
-                          <option>Иное</option>
+                          <?php foreach ($tags as $tag): ?>
+                            <option value="<?= $tag['id'] ?>">
+                              <?= $tag['title'] ?>
+                            </option>
+                          <?php endforeach ?>
                         </select>
                       </div>
                     </div>
@@ -234,7 +250,7 @@
                 <button
                   type="submit"
                   class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:pointer-events-none disabled:opacity-50"
-                  disabled>
+                >
                   Сохранить
                 </button>
               </div>

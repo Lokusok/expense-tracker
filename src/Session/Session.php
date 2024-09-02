@@ -37,4 +37,15 @@ class Session
 
     return redirect("/");
   }
+
+  public static function get(string $key): mixed
+  {
+    switch ($key) {
+      case "id": {
+        return $_SESSION[self::SESSION_KEY];
+      }
+    }
+
+    return false;
+  }
 }

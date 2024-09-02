@@ -16,6 +16,7 @@ $router = new Router();
 $router->get("/", [IndexController::class, 'index']);
 
 $router->get("/expenses", [ExpensesController::class, 'index']);
+$router->post("/expenses", [ExpensesController::class, 'store']);
 
 $router->get("/login", [SessionController::class, 'index']);
 $router->post("/login", [SessionController::class, 'login']);
@@ -23,6 +24,7 @@ $router->delete("/logout", [SessionController::class, 'logout']);
 
 $router->get("/register", [RegisterController::class, 'index']);
 $router->post("/register", [RegisterController::class, 'store']);
+
 
 $method = $_SERVER["REQUEST_METHOD"];
 $url = explode("?", $_SERVER["REQUEST_URI"])[0];
