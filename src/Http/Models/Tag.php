@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Models;
 
+use App\Containers\Database\DatabaseContainer;
+
 class Tag extends BasicModel
 {
   public static function create(array $attrs)
@@ -13,7 +15,7 @@ class Tag extends BasicModel
 
   public static function all(): array
   {
-    $db = new \PDO("mysql:host=172.21.0.1;port=4422;dbname=full", "root", "");
+    $db = DatabaseContainer::get('db');
 
     $db->beginTransaction();
 

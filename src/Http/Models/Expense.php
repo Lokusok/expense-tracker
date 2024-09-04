@@ -6,11 +6,13 @@ namespace App\Http\Models;
 
 use App\Session\Session;
 
+use App\Containers\Database\DatabaseContainer;
+
 class Expense extends BasicModel
 {
   public static function create(array $attrs): int|bool
   {
-    $db = new \PDO("mysql:host=172.21.0.1;port=4422;dbname=full", "root", "");
+    $db = DatabaseContainer::get('db');
 
     $db->beginTransaction();
 

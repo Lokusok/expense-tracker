@@ -11,6 +11,7 @@
         "symfony/var-dumper": "^7.1"
     },
     "require": {
-        "fakerphp/faker": "^1.23"
+        "fakerphp/faker": "^1.23",
+        "vlucas/phpdotenv": "^5.6"
     }
 }

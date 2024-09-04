@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Models;
 
+use App\Containers\Database\DatabaseContainer;
+
 class User
 {
   public static function create(array $attrs): int|bool
   {
-    $db = new \PDO("mysql:host=172.21.0.1;port=4422;dbname=full", "root", "");
+    $db = DatabaseContainer::get('db');
 
     $db->beginTransaction();
 
@@ -37,7 +39,7 @@ class User
 
   public static function findByEmail(string $email): array|bool
   {
-    $db = new \PDO("mysql:host=172.21.0.1;port=4422;dbname=full", "root", "");
+    $db = DatabaseContainer::get('db');
 
     $db->beginTransaction();
 

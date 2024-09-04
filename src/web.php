@@ -11,6 +11,15 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\ExpensesController;
 
+use App\Containers\Database\DatabaseContainer;
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+$dsn = "mysql:host={$_ENV['DB_HOST']};port={$_ENV['DB_PORT']};dbname={$_ENV['DB_NAME']}";
+
+DatabaseContainer::set('db', new \PDO($dsn, $_ENV['DB_USER'], $_ENV['DB_PASSWORD']));
+
 $router = new Router();
 
 $router->get("/", [IndexController::class, 'index']);
