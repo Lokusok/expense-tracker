@@ -26,6 +26,7 @@ $router->get("/", [IndexController::class, 'index']);
 
 $router->get("/expenses", [ExpensesController::class, 'index']);
 $router->post("/expenses", [ExpensesController::class, 'store']);
+$router->delete("/expenses/delete", [ExpensesController::class, 'destroy']);
 
 $router->get("/login", [SessionController::class, 'index']);
 $router->post("/login", [SessionController::class, 'login']);

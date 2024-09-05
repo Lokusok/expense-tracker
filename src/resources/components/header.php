@@ -29,18 +29,42 @@
         <div class="my-2 bg-gray-600 h-[1px]"></div>
       </div>
       <div
-        class="p-2.5 flex items-center rounded-md px-4 duration-300 bg-gray-700 text-white"
+        class="pr-[45px] relative p-2.5 flex items-center rounded-md px-4 duration-300 bg-gray-700 text-white"
       >
         <i class="bi bi-search text-sm"></i>
-        <input
-          type="text"
-          placeholder="Search"
-          class="
-            text-[15px] ml-4 w-full bg-transparent focus:outline-none
-            <?= !isAuth() ? 'pointer-events-none opacity-50' : '' ?>
-          "
-          <?= !isAuth() ? 'disabled' : '' ?>
-        />
+        <form
+          x-data="{
+            queryOnRender: '<?= $_GET['q'] ?? '' ?>',
+            query: '<?= $_GET['q'] ?? '' ?>',
+
+            get isSubmitDisabled() {
+              return this.query.length === 0 && this.queryOnRender.length === 0;
+            }
+          }"
+          action=""
+          method="GET"
+        >
+          <input
+            x-model="query"
+            type="text"
+            name="q"
+            placeholder="Search"
+            class="
+              text-[15px] ml-4 w-full bg-transparent focus:outline-none
+              <?= !isAuth() ? 'pointer-events-none opacity-50' : '' ?>
+            "
+            <?= !isAuth() ? 'disabled' : '' ?>
+          />
+          <div class="absolute right-0 top-0 h-[100%]">
+            <button
+              :disabled="isSubmitDisabled"
+              type="submit"
+              class="bg-blue-800 hover:bg-blue-700 active:opacity-60 text-white w-[40px] flex justify-center items-center rounded h-[100%] disabled:pointer-events-none disabled:opacity-50"
+            >
+              <i class="bi bi-search"></i>
+            </button>
+          </div>
+        </form>
       </div>
       <a
         href="/"

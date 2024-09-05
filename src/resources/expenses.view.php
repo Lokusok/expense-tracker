@@ -2,21 +2,40 @@
 
 <div class="px-3" x-data="{
   isModalOpen: '<?= $_GET['modalAddOpen'] ?? '' ?>' === 'true',
+  isDeleteConfirmModalOpen: false,
+  deleteItemId: null,
 
   openModal() {
     this.isModalOpen = true;
     window.history.pushState({}, '', `?modalAddOpen=${this.isModalOpen}`);
   },
 
+  showDeleteConfirmModal(itemId) {
+    this.isDeleteConfirmModalOpen = true;
+    this.deleteItemId = itemId;
+
+    window.history.pushState({}, '', `?modalDeleteOpen=${this.isDeleteConfirmModalOpen}`);
+  },
+
+  closeDeleteConfirmModal() {
+    this.isDeleteConfirmModalOpen = false;
+    this.clearUrlState();
+    this.deleteItemId = null;
+  },
+
   closeModal() {
     this.isModalOpen = false;
+    this.clearUrlState();
+  },
 
+  clearUrlState() {
     const urlWithoutQuery = window.location.href.split('?')[0];
     window.history.pushState({}, '', urlWithoutQuery);
-  }
+  },
 }">
   <div class="text-center text-[30px] font-bold my-4">
     <h1>Все расходы</h1>
+    <span x-text="deleteItemId"></span>
   </div>
 
   <div class="flex justify-end mb-[30px]">
@@ -29,119 +48,113 @@
     </div>
   </div>
 
-  <div class="relative overflow-x-auto">
-    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-      <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-        <tr>
-          <th scope="col" class="px-6 py-3">
-            Название расхода
-          </th>
-          <th scope="col" class="px-6 py-3">
-            Описание
-          </th>
-          <th scope="col" class="px-6 py-3">
-            Категория
-          </th>
-          <th scope="col" class="px-6 py-3">
-            Сумма
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-          <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-            Apple MacBook Pro 17"
-          </th>
-          <td class="px-6 py-4">
-            Lorem ipsum dolor sit amet...
-          </td>
-          <td class="px-6 py-4">
-            Laptop
-          </td>
-          <td class="px-6 py-4">
-            $2999
-          </td>
-        </tr>
-        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-          <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-            Microsoft Surface Pro
-          </th>
-          <td class="px-6 py-4">
-            Lorem ipsum dolor sit amet...
-          </td>
-          <td class="px-6 py-4">
-            White
-          </td>
-          <td class="px-6 py-4">
-            $1999
-          </td>
-        </tr>
-        <tr class="bg-white dark:bg-gray-800">
-          <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-            Magic Mouse 2
-          </th>
-          <td class="px-6 py-4">
-            Lorem ipsum dolor sit amet...
-          </td>
-          <td class="px-6 py-4">
-            Black
-          </td>
-          <td class="px-6 py-4">
-            $99
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <?php if (count($expenses) > 0): ?>
+    <div class="relative overflow-x-auto">
+      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th scope="col" class="px-6 py-3">
+              Название расхода
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Описание
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Категория
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Сумма
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Действия
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach($expenses as $expense): ?>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+              <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <?= $expense['title'] ?>
+              </th>
+              <td class="px-6 py-4">
+                <?= $expense['description'] ?>
+              </td>
+              <td class="px-6 py-4">
+                <?= $expense['category_title'] ?>
+              </td>
+              <td class="px-6 py-4">
+                <?= $expense['price'] ?>
+              </td>
+              <td class="px-6 py-4 flex gap-x-3">
+                <button class="px-3 bg-blue-800 text-white rounded cursor-pointer w-[30px] h-[30px] flex justify-center items-center hover:bg-blue-700 active:opacity-70">
+                  <i class="bi bi-pencil-square"></i>
+                </button>
 
-  <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-    <div class="flex flex-1 justify-between sm:hidden">
-      <a href="#" class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
-        Назад
-      </a>
-      <a href="#" class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
-        Дальше
-      </a>
+                <button
+                  class="px-3 bg-red-800 text-white rounded cursor-pointer w-[30px] h-[30px] flex justify-center items-center hover:bg-red-700 active:opacity-70"
+                  @click="showDeleteConfirmModal(<?= $expense['expense_id'] ?>)"
+                >
+                  <i class="bi bi-trash3-fill"></i>
+                </button>
+              </td>
+            </tr>
+          <?php endforeach ?>
+        </tbody>
+      </table>
     </div>
-    <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-      <div>
-        <p class="text-sm text-gray-700">
-          Показывается с
-          <span class="font-medium">1</span>
-          до
-          <span class="font-medium">10</span>
-          из
-          <span class="font-medium">97</span>
-          результатов
-        </p>
+
+    <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+      <div class="flex flex-1 justify-between sm:hidden">
+        <a href="#" class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+          Назад
+        </a>
+        <a href="#" class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+          Дальше
+        </a>
       </div>
-      <div>
-        <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-          <a href="#" class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
-            <span class="sr-only">Назад</span>
-            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
-            </svg>
-          </a>
-          <!-- Current: "z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600", Default: "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0" -->
-          <a href="#" aria-current="page" class="relative z-10 inline-flex items-center bg-indigo-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">1</a>
-          <a href="#" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">2</a>
-          <a href="#" class="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex">3</a>
-          <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">...</span>
-          <a href="#" class="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex">8</a>
-          <a href="#" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">9</a>
-          <a href="#" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">10</a>
-          <a href="#" class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
-            <span class="sr-only">Дальше</span>
-            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
-            </svg>
-          </a>
-        </nav>
+      <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+        <div>
+          <p class="text-sm text-gray-700">
+            Показывается с
+            <span class="font-medium">1</span>
+            до
+            <span class="font-medium">10</span>
+            из
+            <span class="font-medium">97</span>
+            результатов
+          </p>
+        </div>
+        <div>
+          <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+            <a href="#" class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+              <span class="sr-only">Назад</span>
+              <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+              </svg>
+            </a>
+            <!-- Current: "z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600", Default: "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0" -->
+            <a href="#" aria-current="page" class="relative z-10 inline-flex items-center bg-indigo-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">1</a>
+            <a href="#" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">2</a>
+            <a href="#" class="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex">3</a>
+            <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">...</span>
+            <a href="#" class="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex">8</a>
+            <a href="#" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">9</a>
+            <a href="#" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">10</a>
+            <a href="#" class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+              <span class="sr-only">Дальше</span>
+              <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+              </svg>
+            </a>
+          </nav>
+        </div>
       </div>
     </div>
-  </div>
+  <?php else: ?>
+    <p class="text-center">Расходов нет...</p>
+  <?php endif; ?>
 
+  <!-- Модалка добавления -->
   <div
     class="relative z-10 hidden"
     :class="{
@@ -255,6 +268,72 @@
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Модалка подтверждения удаления -->
+  <div
+    :class="{
+      hidden: !isDeleteConfirmModalOpen
+    }"
+    class="relative z-10 hidden"
+    aria-labelledby="modal-title"
+    role="dialog"
+    aria-modal="true"
+  >
+
+    <div
+      class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+      aria-hidden="true"
+    >
+    </div>
+
+    <div @click="closeDeleteConfirmModal" class="fixed inset-0 z-10 w-screen overflow-y-auto">
+      <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+        
+        <div @click.stop class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+          <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+            <div class="sm:flex sm:items-start">
+              <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                </svg>
+              </div>
+              <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">
+                  Удалить запись?
+                </h3>
+                <div class="mt-2">
+                  <p class="text-sm text-gray-500">
+                    Вы уверены, что хотите удалить эту запись. Удалённые записи восстановлению не подлежат.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+            <form
+              :action="`expenses/delete?id=${deleteItemId}`"
+              method="POST"
+            >
+              <input type="hidden" name="_method" value="DELETE">
+              <button
+                type="submit"
+                class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+              >
+                Удалить
+              </button>
+            </form>
+            <button
+              type="button"
+              class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+              @click="closeDeleteConfirmModal"
+            >
+              Отмена
+            </button>
           </div>
         </div>
       </div>

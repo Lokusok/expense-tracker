@@ -16,10 +16,20 @@ class ExpensesController
       return redirect("/login");
     }
 
+    $searchQuery = '';
+
+    if (isset($_GET['q'])) {
+      $searchQuery = normalize($_GET['q']);
+    }
+
     $tags = Tag::all();
+    $expenses = Expense::all([
+      'q' => $searchQuery
+    ]);
 
     View::make("expenses", [
-      "tags" => $tags
+      "tags" => $tags,
+      "expenses" => $expenses
     ]);
   }
 
@@ -41,6 +51,19 @@ class ExpensesController
       "category" => $category
     ]);
 
-    dd($id);
+    return redirect("/expenses");
+  }
+
+  public static function destroy()
+  {
+    if (! isAuth()) {
+      return redirect("/login");
+    }
+    
+    $id = normalize($_GET["id"]);
+    
+    $result = Expense::delete($id);
+
+    return redirect("/expenses");
   }
 }
