@@ -10,6 +10,7 @@ class Router
     'get' => [],
     'post' => [],
     'delete' => [],
+    'put' => [],
   ];
 
   public function get(string $path, callable|array $fn): void
@@ -27,10 +28,16 @@ class Router
     $this->routes['delete'][$path] = $fn;
   }
 
+  public function put(string $path, callable|array $fn): void
+  {
+    $this->routes['put'][$path] = $fn;
+  }
+
   public function resolve(string $path, string $method): void
   {
     $isCss = str_ends_with($path, ".css");
 
+    
     if ($isCss) {
       header("Content-Type: text/css;");
       echo file_get_contents(ASSETS_PATH . "/css/style.css");

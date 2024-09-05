@@ -50,7 +50,7 @@ class Expense extends BasicModel
     $result = [];
 
     try {
-      $query = "select expenses.id as expense_id, expenses.title, expenses.description, price, tags.title as category_title from expenses
+      $query = "select expenses.id as expense_id, expenses.title, expenses.description, price, tags.title as category_title, tags.id as category_id from expenses
                 right join tags on expenses.tag_id = tags.id
                 where user_id = :user_id";
 
@@ -101,5 +101,35 @@ class Expense extends BasicModel
     }
 
     return $result;
+  }
+
+  public static function update(string $id, array $attrs)
+  {
+    $db = DatabaseContainer::get('db');
+
+    $db->beginTransaction();
+
+    try {
+      $db->commit();
+
+      $query = "update expenses
+                set title = :title, description = :description,
+                    price = :price, tag_id = :category_id
+                where id = :expense_id";
+
+      $statement = $db->prepare($query);
+      $statement->execute([
+        ':expense_id' => $id,
+        ':title' => $attrs['title'],
+        ':description' => $attrs['description'],
+        ':price' => $attrs['price'],
+        ':category_id' => $attrs['category_id']
+      ]);
+
+    } catch (\Exception $e) {
+      if ($db->inTransaction()) {
+        $db->rollBack();
+      }
+    }
   }
 }

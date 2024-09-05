@@ -66,4 +66,24 @@ class ExpensesController
 
     return redirect("/expenses");
   }
+
+  public static function edit()
+  {
+    if (! isAuth()) {
+      return redirect("/login");
+    }
+
+    $id = normalize($_POST['expense_id']);
+
+    $expenseUpdate = [
+      'title' => normalize($_POST['expense_title']),
+      'price' => normalize($_POST['expense_price']),
+      'description' => normalize($_POST['expense_descr']),
+      'category_id' => normalize($_POST['expense_category'])
+    ];
+
+    Expense::update($id, $expenseUpdate);
+
+    return redirect("/expenses");
+  }
 }

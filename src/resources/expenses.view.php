@@ -2,14 +2,49 @@
 
 <div class="px-3" x-data="{
   isModalOpen: '<?= $_GET['modalAddOpen'] ?? '' ?>' === 'true',
-  isDeleteConfirmModalOpen: false,
+  isDeleteConfirmModalOpen: '<?= $_GET['modalDeleteOpen'] ?? '' ?>' === 'true',
+  isEditModalOpen: '<?= $_GET['modalEditOpen'] ?? '' ?>' === 'true',
+
+  editItemShape: (sessionStorage.getItem('editItemShape') ? JSON.parse(sessionStorage.getItem('editItemShape')) : ({
+    id: '',
+    title: '',
+    price: '',
+    description: '',
+    category_id: ''
+  })),
+
   deleteItemId: null,
 
+  // Сохранение редактируемой сущности в sessionStorage
+  updateEditItemShape() {
+    const existShape = JSON.parse(sessionStorage.getItem('editItemShape') ?? '{}');
+
+    existShape.id = this.editItemShape.id;
+    existShape.title = this.editItemShape.title;
+    existShape.price = this.editItemShape.price;
+    existShape.description = this.editItemShape.description;
+    existShape.category_id = this.editItemShape.category_id;
+
+    sessionStorage.setItem('editItemShape', JSON.stringify(existShape));
+  },
+
+  // Удаление редактируемой сущности из sessionStorage
+  deleteEditItemShape() {
+    sessionStorage.removeItem('editItemShape');
+  },
+
+  // Модалка добавления
   openModal() {
     this.isModalOpen = true;
     window.history.pushState({}, '', `?modalAddOpen=${this.isModalOpen}`);
   },
 
+  closeModal() {
+    this.isModalOpen = false;
+    this.clearUrlState();
+  },
+
+  // Модалка удаления
   showDeleteConfirmModal(itemId) {
     this.isDeleteConfirmModalOpen = true;
     this.deleteItemId = itemId;
@@ -19,13 +54,27 @@
 
   closeDeleteConfirmModal() {
     this.isDeleteConfirmModalOpen = false;
-    this.clearUrlState();
     this.deleteItemId = null;
+
+    this.clearUrlState();
   },
 
-  closeModal() {
-    this.isModalOpen = false;
+  // Модалка редактирования
+  showEditModal(itemShape) {
+    console.log(itemShape, '<<<')
+
+    this.isEditModalOpen = true;
+    this.editItemShape = itemShape;
+
+    window.history.pushState({}, '', `?modalEditOpen=${this.isEditModalOpen}`);
+  },
+
+  closeEditModal() {
+    this.isEditModalOpen = false;
+    this.editItemId = null;
+
     this.clearUrlState();
+    this.deleteEditItemShape();
   },
 
   clearUrlState() {
@@ -33,7 +82,7 @@
     window.history.pushState({}, '', urlWithoutQuery);
   },
 }">
-  <div class="text-center text-[30px] font-bold my-4">
+  <div x-effect="updateEditItemShape" class="text-center text-[30px] font-bold my-4">
     <h1>Все расходы</h1>
     <span x-text="deleteItemId"></span>
   </div>
@@ -86,7 +135,18 @@
                 <?= $expense['price'] ?>
               </td>
               <td class="px-6 py-4 flex gap-x-3">
-                <button class="px-3 bg-blue-800 text-white rounded cursor-pointer w-[30px] h-[30px] flex justify-center items-center hover:bg-blue-700 active:opacity-70">
+                <button
+                  class="px-3 bg-blue-800 text-white rounded cursor-pointer w-[30px] h-[30px] flex justify-center items-center hover:bg-blue-700 active:opacity-70"
+                  @click="showEditModal(
+                    {
+                      id: '<?= $expense['expense_id'] ?>',
+                      title: '<?= $expense['title'] ?>',
+                      description: '<?= $expense['description'] ?>',
+                      category_id: '<?= $expense['category_id'] ?>',
+                      price: '<?= $expense['price'] ?>'
+                    }
+                  )"
+                >
                   <i class="bi bi-pencil-square"></i>
                 </button>
 
@@ -103,27 +163,7 @@
       </table>
     </div>
 
-    <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-      <div class="flex flex-1 justify-between sm:hidden">
-        <a href="#" class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
-          Назад
-        </a>
-        <a href="#" class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
-          Дальше
-        </a>
-      </div>
-      <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-        <div>
-          <p class="text-sm text-gray-700">
-            Показывается с
-            <span class="font-medium">1</span>
-            до
-            <span class="font-medium">10</span>
-            из
-            <span class="font-medium">97</span>
-            результатов
-          </p>
-        </div>
+    <div class="flex items-center justify-center border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
         <div>
           <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
             <a href="#" class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
@@ -136,10 +176,6 @@
             <a href="#" aria-current="page" class="relative z-10 inline-flex items-center bg-indigo-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">1</a>
             <a href="#" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">2</a>
             <a href="#" class="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex">3</a>
-            <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">...</span>
-            <a href="#" class="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex">8</a>
-            <a href="#" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">9</a>
-            <a href="#" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">10</a>
             <a href="#" class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
               <span class="sr-only">Дальше</span>
               <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -334,6 +370,144 @@
             >
               Отмена
             </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Модалка изменения -->
+  <div
+    class="relative z-10 hidden"
+    :class="{
+      hidden: !isEditModalOpen
+    }"
+    aria-labelledby="modal-title"
+    role="dialog"
+    aria-modal="true">
+
+    <div
+      class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+      aria-hidden="true">
+    </div>
+
+    <div @click="closeEditModal" class="fixed inset-0 z-10 w-screen overflow-y-auto">
+      <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+        <div @click.stop class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+          <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+            <form
+              :action="`/expenses/edit?id=${editItemShape.id}`"
+              method="POST"
+            >
+              <input type="hidden" name="_method" value="put">
+              <input
+                :value="editItemShape.id"
+                type="hidden"
+                name="expense_id"
+              >
+
+              <div class="space-y-12">
+                <div class="border-b border-gray-900/10 pb-12">
+                  <h2 class="text-base font-semibold leading-7 text-gray-900">
+                    Редактирование записи
+                  </h2>
+                  <p class="mt-1 text-sm leading-6 text-gray-600">
+                    Информация о записи будет обновлена 
+                  </p>
+
+                  <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-6">
+                    <div class="sm:col-span-4">
+                      <label for="expense_title" class="block text-sm font-medium leading-6 text-gray-900">
+                        Название расхода
+                      </label>
+                      <div class="mt-2">
+                        <div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                          <input
+                            x-model="editItemShape.title"
+                            type="text"
+                            name="expense_title"
+                            id="expense_title"
+                            autocomplete="expense_title"
+                            class="px-2 block flex-1 border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                            placeholder="На покушоц...">
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="sm:col-span-4">
+                      <label for="expense_price" class="block text-sm font-medium leading-6 text-gray-900">
+                        Стоимость
+                      </label>
+                      <div class="mt-2">
+                        <div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                          <input
+                            x-model="editItemShape.price"
+                            type="text"
+                            name="expense_price"
+                            id="expense_price"
+                            autocomplete="expense_price"
+                            class="px-2 block flex-1 border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                            placeholder="500₽">
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-span-full">
+                      <label
+                        for="expense_descr"
+                        class="block text-sm font-medium leading-6 text-gray-900">
+                        Краткое описание
+                      </label>
+                      <div class="mt-2">
+                        <textarea
+                          x-model="editItemShape.description"
+                          id="expense_descr"
+                          name="expense_descr"
+                          rows="3"
+                          class="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                      </div>
+                      <p class="mt-3 text-sm leading-6 text-gray-600">Немного опишите на что были расходы</p>
+                    </div>
+
+                    <div class="sm:col-span-3">
+                      <label for="expense_category" class="block text-sm font-medium leading-6 text-gray-900">
+                        Категория
+                      </label>
+                      <div class="mt-2">
+                        <select
+                          x-model="editItemShape.category_id"
+                          id="expense_category"
+                          name="expense_category"
+                          class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                        >
+                          <?php foreach ($tags as $tag): ?>
+                            <option value="<?= $tag['id'] ?>">
+                              <?= $tag['title'] ?>
+                            </option>
+                          <?php endforeach ?>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-6 flex items-center justify-end gap-x-6">
+                <button
+                  @click="closeEditModal"
+                  type="button"
+                  class="text-sm font-semibold leading-6 text-gray-900">
+                  Отмена
+                </button>
+
+                <button
+                  type="submit"
+                  class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:pointer-events-none disabled:opacity-50"
+                >
+                  Сохранить
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
