@@ -43,13 +43,16 @@ class Expense extends BasicModel
   public static function all(array $params): array
   {
     $db = DatabaseContainer::get('db');
+    $db->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
 
     $userId = Session::get('id');
 
     $db->beginTransaction();
+
     $result = [];
 
     try {
+      // Получение записей
       $query = "select expenses.id as expense_id, expenses.title, expenses.description, price, tags.title as category_title, tags.id as category_id from expenses
                 right join tags on expenses.tag_id = tags.id
                 where user_id = :user_id";
@@ -58,17 +61,39 @@ class Expense extends BasicModel
         $query .= " and expenses.title like :query";
       }
 
+      $query .= " limit :limit offset :offset";
+
       $statement = $db->prepare($query);
 
       $statement->execute([
-        'user_id' => $userId,
-        'query' => "%{$params['q']}%"
+        ':user_id' => $userId,
+        ':query' => "%{$params['q']}%",
+        ':limit' => (int)$params['limit'],
+        ':offset' => (int)$params['offset']
       ]);
 
-      $result = $statement->fetchAll();
+      $result[] = $statement->fetchAll();
+
+      // Получение тотального количества записей
+      $query = "select count(id) as total from expenses
+                where user_id = :user_id";
+
+      if (isset($params['q'])) {
+        $query .= " and title like :query";
+      }
+
+      $statement = $db->prepare($query);
+      $statement->execute([
+        ':user_id' => $userId,
+        ':query' => "%{$params['q']}%"
+      ]);
+
+      $result[] = $statement->fetch()['total'];
 
       $db->commit();
     } catch (\Exception $e) {
+      dd($e);
+
       if ($db->inTransaction()) {
         $db->rollBack();
       }

@@ -12,6 +12,7 @@ use App\Http\Controllers\IndexController;
 use App\Http\Controllers\ExpensesController;
 
 use App\Containers\Database\DatabaseContainer;
+use App\Http\Controllers\ProfileController;
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
@@ -28,6 +29,8 @@ $router->get("/expenses", [ExpensesController::class, 'index']);
 $router->post("/expenses", [ExpensesController::class, 'store']);
 $router->delete("/expenses/delete", [ExpensesController::class, 'destroy']);
 $router->put("/expenses/edit", [ExpensesController::class, 'edit']);
+
+$router->get("/profile", [ProfileController::class, 'index']);
 
 $router->get("/login", [SessionController::class, 'index']);
 $router->post("/login", [SessionController::class, 'login']);

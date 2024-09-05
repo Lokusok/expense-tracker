@@ -17,19 +17,28 @@ class ExpensesController
     }
 
     $searchQuery = '';
+    $currentPage = normalize($_GET['page'] ?? '1');
 
     if (isset($_GET['q'])) {
       $searchQuery = normalize($_GET['q']);
     }
 
     $tags = Tag::all();
-    $expenses = Expense::all([
-      'q' => $searchQuery
+    $perPage = 5;
+    
+    [$expenses, $total] = Expense::all([
+      "q" => $searchQuery,
+      "limit" => $perPage,
+      "offset" => ($currentPage - 1) * $perPage
     ]);
+
+    $maxPage = ceil($total / $perPage);
 
     View::make("expenses", [
       "tags" => $tags,
-      "expenses" => $expenses
+      "expenses" => $expenses,
+      "maxPage" => $maxPage,
+      "currentPage" => $currentPage
     ]);
   }
 
@@ -48,7 +57,7 @@ class ExpensesController
       "title" => $title,
       "price" => $price,
       "descr" => $descr,
-      "category" => $category
+      "category" => $category,
     ]);
 
     return redirect("/expenses");

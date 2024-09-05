@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Full</title>
+  <title>Expense Tracker</title>
 
   <link rel="stylesheet" href="/style.css" >
   
@@ -77,6 +77,19 @@
         <i class="bi bi-house-door-fill"></i>
         <span class="text-[15px] ml-4 text-gray-200 font-bold">Главная</span>
       </a>
+
+      <a
+        href="/profile"
+        class="
+          p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white
+          <?= urlIs("/profile") ? 'bg-blue-600 text-white' : '' ?>
+          <?= !isAuth() ? 'opacity-50 pointer-events-none' : ''  ?>
+        "
+      >
+        <i class="bi bi-person-square"></i>
+        <span class="text-[15px] ml-4 text-gray-200 font-bold">Профиль</span>
+      </a>
+
       <a
         href="/expenses"
         class="
