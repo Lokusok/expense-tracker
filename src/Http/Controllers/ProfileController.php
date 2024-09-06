@@ -29,13 +29,21 @@ class ProfileController
       return redirect("/login");
     }
 
+    
     $id = normalize($_GET['id']);
     $email = normalize($_POST['email']);
     $username = normalize($_POST['username']);
 
+    // Достаём и грузим аватарку
+    $fileId = uniqid();
+    $fileName = $fileId . ".jpg";
+    
+    move_uploaded_file($_FILES['avatar']['tmp_name'], ASSETS_PATH . "/images/$fileName");
+
     User::update($id, [
       'email' => $email,
-      'full_name' => $username
+      'full_name' => $username,
+      'avatar_url' => $fileName
     ]);
 
     return redirect("/profile");

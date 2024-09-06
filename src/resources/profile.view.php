@@ -35,7 +35,11 @@
     }
   }"
 >
-  <form action="/profile/update?id=<?= $user['id'] ?>" method="POST">
+  <form
+    action="/profile/update?id=<?= $user['id'] ?>"
+    method="POST"
+    enctype="multipart/form-data"
+  >
     <input type="hidden" name="_method" value="patch">
 
     <div class="space-y-12">
@@ -104,6 +108,7 @@
               >
                 <input
                   type="file"
+                  name="avatar"
                   class="opacity-0 absolute left-0 top-0 w-[100%] h-[100%] cursor-pointer"
                   @change="handleAvatarUpload"
                 >

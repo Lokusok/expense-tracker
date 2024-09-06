@@ -98,13 +98,14 @@ class User
 
     try {
       $query = "update users
-                set full_name = :full_name, email = :email
+                set full_name = :full_name, email = :email, avatar_url = :avatar_url
                 where id = $id";
 
       $statement = $db->prepare($query);
       $statement->execute([
         ':full_name' => $attrs['full_name'],
-        ':email' => $attrs['email']
+        ':email' => $attrs['email'],
+        ':avatar_url' => $attrs['avatar_url']
       ]);
 
       $db->commit();

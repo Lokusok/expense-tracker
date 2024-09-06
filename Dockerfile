@@ -46,6 +46,8 @@ COPY . /var/www/html
 # Use the default production configuration for PHP runtime arguments, see
 # https://github.com/docker-library/docs/tree/master/php#configuration
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
+
+RUN chmod -R 777 /var/www/html/src/resources/images
 RUN a2enmod rewrite
 RUN apt-get update && apt-get install -y vim nano
 
