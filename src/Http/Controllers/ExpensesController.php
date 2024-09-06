@@ -32,6 +32,12 @@ class ExpensesController
       "offset" => ($currentPage - 1) * $perPage
     ]);
 
+    // Если нет записей на текущей странице - уходим на предыдущую
+    if (count($expenses) === 0 && $currentPage > 1) {
+      $prevPage = $currentPage - 1;
+      return redirect("/expenses?page=$prevPage");
+    }
+
     $maxPage = ceil($total / $perPage);
 
     View::make("expenses", [
@@ -69,11 +75,17 @@ class ExpensesController
       return redirect("/login");
     }
     
+    // $from = $_SERVER['HTTP_REFERER'];
+    // $fromQuery = parse_url($from, PHP_URL_QUERY);
+    // parse_str($fromQuery, $query);
+
+    // $fromPage = $query['page'];
+
     $id = normalize($_GET["id"]);
     
     $result = Expense::delete($id);
 
-    return redirect("/expenses");
+    return redirect($_SERVER['HTTP_REFERER']);
   }
 
   public static function edit()

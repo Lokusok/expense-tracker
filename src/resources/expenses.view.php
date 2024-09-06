@@ -2,7 +2,6 @@
 
 <div class="px-3" x-data="{
   isModalOpen: '<?= $_GET['modalAddOpen'] ?? '' ?>' === 'true',
-  isDeleteConfirmModalOpen: '<?= $_GET['modalDeleteOpen'] ?? '' ?>' === 'true',
   isEditModalOpen: '<?= $_GET['modalEditOpen'] ?? '' ?>' === 'true',
 
   editItemShape: (sessionStorage.getItem('editItemShape') ? JSON.parse(sessionStorage.getItem('editItemShape')) : ({
@@ -36,50 +35,59 @@
   // Модалка добавления
   openModal() {
     this.isModalOpen = true;
-    window.history.pushState({}, '', `?modalAddOpen=${this.isModalOpen}`);
+    this.addToQuery('modalAddOpen', true);
   },
 
   closeModal() {
     this.isModalOpen = false;
-    this.clearUrlState();
+    this.removeFromQuery('modalAddOpen', false);
   },
 
-  // Модалка удаления
+  // Модалка удаления (не сохраняем в урл)
   showDeleteConfirmModal(itemId) {
     this.isDeleteConfirmModalOpen = true;
     this.deleteItemId = itemId;
-
-    window.history.pushState({}, '', `?modalDeleteOpen=${this.isDeleteConfirmModalOpen}`);
   },
 
   closeDeleteConfirmModal() {
     this.isDeleteConfirmModalOpen = false;
     this.deleteItemId = null;
 
-    this.clearUrlState();
+    this.removeFromQuery('modalDeleteOpen');
   },
 
   // Модалка редактирования
   showEditModal(itemShape) {
-    console.log(itemShape, '<<<')
-
     this.isEditModalOpen = true;
     this.editItemShape = itemShape;
 
-    window.history.pushState({}, '', `?modalEditOpen=${this.isEditModalOpen}`);
+    this.addToQuery('modalEditOpen', true);
   },
 
   closeEditModal() {
     this.isEditModalOpen = false;
     this.editItemId = null;
 
-    this.clearUrlState();
+    this.removeFromQuery('modalEditOpen');
     this.deleteEditItemShape();
   },
 
-  clearUrlState() {
-    const urlWithoutQuery = window.location.href.split('?')[0];
-    window.history.pushState({}, '', urlWithoutQuery);
+  addToQuery(name, val) {
+    let existQuery = window.location.search;
+
+    if (existQuery) existQuery += '&';
+    else existQuery += '?';
+
+    window.history.pushState({}, '', `${existQuery}${name}=${val}`);
+  },
+
+  removeFromQuery(name) {
+    const query = new URLSearchParams(window.location.search);
+
+    query.delete(name);
+
+    window.history.pushState({}, '', `?${query.toString()}`);
+    console.log({ query: query.toString() });
   },
 }">
   <div
@@ -370,7 +378,7 @@
                 </h3>
                 <div class="mt-2">
                   <p class="text-sm text-gray-500">
-                    Вы уверены, что хотите удалить эту запись. Удалённые записи восстановлению не подлежат.
+                    Вы уверены, что хотите удалить эту запись? Удалённые записи восстановлению не подлежат.
                   </p>
                 </div>
               </div>
