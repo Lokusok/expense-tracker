@@ -82,7 +82,10 @@
     window.history.pushState({}, '', urlWithoutQuery);
   },
 }">
-  <div x-effect="updateEditItemShape" class="text-center text-[30px] font-bold my-4">
+  <div
+    x-effect="updateEditItemShape"
+    class="text-center text-[30px] font-bold my-4"
+  >
     <h1>Все расходы</h1>
   </div>
 

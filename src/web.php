@@ -31,6 +31,7 @@ $router->delete("/expenses/delete", [ExpensesController::class, 'destroy']);
 $router->put("/expenses/edit", [ExpensesController::class, 'edit']);
 
 $router->get("/profile", [ProfileController::class, 'index']);
+$router->patch("/profile/update", [ProfileController::class, 'update']);
 
 $router->get("/login", [SessionController::class, 'index']);
 $router->post("/login", [SessionController::class, 'login']);

@@ -11,6 +11,7 @@ class Router
     'post' => [],
     'delete' => [],
     'put' => [],
+    'patch' => []
   ];
 
   public function get(string $path, callable|array $fn): void
@@ -33,14 +34,28 @@ class Router
     $this->routes['put'][$path] = $fn;
   }
 
+  public function patch(string $path, callable|array $fn): void
+  {
+    $this->routes['patch'][$path] = $fn;
+  }
+
   public function resolve(string $path, string $method): void
   {
     $isCss = str_ends_with($path, ".css");
+    $isImage = str_ends_with($path, ".jpg");
 
-    
+    $splittedPath = explode("/", $path);
+    $assetName = $splittedPath[count($splittedPath) - 1];
+
     if ($isCss) {
       header("Content-Type: text/css;");
-      echo file_get_contents(ASSETS_PATH . "/css/style.css");
+      echo file_get_contents(ASSETS_PATH . "/css/$assetName");
+      return;
+    }
+
+    if ($isImage) {
+      header("Content-Type: image/jpg;");
+      echo file_get_contents(ASSETS_PATH . "/images/$assetName");
       return;
     }
 

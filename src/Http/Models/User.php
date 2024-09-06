@@ -20,7 +20,7 @@ class User
         ':email' => $attrs['email'],
         ':full_name' => $attrs['full_name'],
         ':password' => $attrs['password'],
-        ':avatar_url' => 'https://picsum.photos/200/300'
+        ':avatar_url' => 'default-avatar.jpg'
       ]);
 
       $id = $db->lastInsertId();
@@ -35,6 +35,33 @@ class User
     }
 
     return false;
+  }
+
+  public static function find(string|int $id): array
+  {
+    $db = DatabaseContainer::get('db');
+
+    $db->beginTransaction();
+    $result = [];
+
+    try {
+      $query = "SELECT * FROM users WHERE id = :id";
+
+      $statement = $db->prepare($query);
+      $statement->execute([
+        ':id' => $id
+      ]);
+
+      $result = $statement->fetch();
+
+      $db->commit();
+    } catch (\Exception $e) {
+      if ($db->inTransaction()) {
+        $db->rollBack();
+      }
+    }
+
+    return $result;
   }
 
   public static function findByEmail(string $email): array|bool
@@ -61,5 +88,30 @@ class User
     }
 
     return $result;
+  }
+
+  public static function update(string $id, array $attrs)
+  {
+    $db = DatabaseContainer::get('db');
+
+    $db->beginTransaction();
+
+    try {
+      $query = "update users
+                set full_name = :full_name, email = :email
+                where id = $id";
+
+      $statement = $db->prepare($query);
+      $statement->execute([
+        ':full_name' => $attrs['full_name'],
+        ':email' => $attrs['email']
+      ]);
+
+      $db->commit();
+    } catch (\Exception $e) {
+      if ($db->inTransaction()) {
+        $db->rollBack();
+      }
+    }
   }
 }
