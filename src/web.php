@@ -1,6 +1,8 @@
 <?php
 
 define("ASSETS_PATH", __DIR__ . "/resources");
+define("ASSETS_CSS", ASSETS_PATH . "/css");
+define("ASSETS_IMAGES", ASSETS_PATH . "/images");
 
 require __DIR__ . "/functions.php";
 
@@ -32,6 +34,7 @@ $router->put("/expenses/edit", [ExpensesController::class, 'edit']);
 
 $router->get("/profile", [ProfileController::class, 'index']);
 $router->patch("/profile/update", [ProfileController::class, 'update']);
+$router->post("/profile/recover-password", [ProfileController::class, 'recoverPassword']);
 
 $router->get("/login", [SessionController::class, 'index']);
 $router->post("/login", [SessionController::class, 'login']);

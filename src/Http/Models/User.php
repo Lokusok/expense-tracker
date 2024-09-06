@@ -99,13 +99,42 @@ class User
     try {
       $query = "update users
                 set full_name = :full_name, email = :email, avatar_url = :avatar_url
-                where id = $id";
+                where id = :id";
 
       $statement = $db->prepare($query);
       $statement->execute([
+        ':id' => $id,
         ':full_name' => $attrs['full_name'],
         ':email' => $attrs['email'],
-        ':avatar_url' => $attrs['avatar_url']
+        ':avatar_url' => $attrs['avatar_url'],
+      ]);
+
+      $db->commit();
+    } catch (\Exception $e) {
+      dd($e);
+      if ($db->inTransaction()) {
+        $db->rollBack();
+      }
+    }
+  }
+
+  public static function setPasswordRecovering(string $id, array $attrs)
+  {
+    $db = DatabaseContainer::get('db');
+
+    $db->beginTransaction();
+
+    try {
+      $query = "update users
+                set password_recover_id = :password_recover_id,
+                    password_recover_expire = :password_recover_expire
+                where id = :id";
+
+      $statement = $db->prepare($query);
+      $statement->execute([
+        ':id' => $id,
+        ':password_recover_id' => $attrs['password_recover_id'],
+        ':password_recover_expire' => $attrs['password_recover_expire'],
       ]);
 
       $db->commit();
