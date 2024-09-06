@@ -36,7 +36,8 @@
           <h1 class="font-bold text-gray-200 text-[15px] ml-3">Tracker</h1>
           <i
             class="bi bi-x cursor-pointer ml-28 lg:hidden"
-          ></i>
+          >
+          </i>
         </div>
         <div class="my-2 bg-gray-600 h-[1px]"></div>
       </div>
@@ -53,14 +54,14 @@
               return this.query.length === 0 && this.queryOnRender.length === 0;
             }
           }"
-          action=""
+          action="/expenses"
           method="GET"
         >
           <input
             x-model="query"
             type="text"
             name="q"
-            placeholder="Search"
+            placeholder="Поиск"
             class="
               text-[15px] ml-4 w-full bg-transparent focus:outline-none
               <?= !isAuth() ? 'pointer-events-none opacity-50' : '' ?>
