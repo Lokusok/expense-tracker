@@ -20,7 +20,7 @@ use App\Containers\Email\EmailContainer;
 
 use PHPMailer\PHPMailer\PHPMailer;
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . "/..");
 $dotenv->load();
 
 // Инициализация контейнера БД
