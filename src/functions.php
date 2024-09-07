@@ -65,3 +65,10 @@ function normalize(string $data): string {
 function isAuth(): bool {
   return Session::isAuth();
 }
+
+/**
+ * Получить текущий URL
+ */
+function getCurrentUrl(): string {
+  return (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]";
+}

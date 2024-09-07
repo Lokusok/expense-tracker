@@ -89,7 +89,7 @@ class RegisterController
       'email' => $email,
       'full_name' => $username,
       'password' => password_hash($password, PASSWORD_BCRYPT),
-      'avatar_url' => 'https://picsum.photos/200/300'
+      'avatar_url' => 'default-avatar.jpg'
     ]);
 
     if (gettype($userId) === "boolean") {

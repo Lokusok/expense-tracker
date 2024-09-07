@@ -70,6 +70,7 @@
           />
           <div class="absolute right-0 top-0 h-[100%]">
             <button
+              x-cloak
               :disabled="isSubmitDisabled"
               type="submit"
               class="bg-blue-800 hover:bg-blue-700 active:opacity-60 text-white w-[40px] flex justify-center items-center rounded h-[100%] disabled:pointer-events-none disabled:opacity-50"

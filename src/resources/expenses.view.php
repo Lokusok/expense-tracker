@@ -142,7 +142,7 @@
                 <?= $expense['category_title'] ?>
               </td>
               <td class="px-6 py-4">
-                <?= $expense['price'] ?>
+                <?= $expense['price'] ?>₽
               </td>
               <td class="px-6 py-4 flex gap-x-3">
                 <button

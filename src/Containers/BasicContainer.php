@@ -8,6 +8,13 @@ abstract class BasicContainer
 {
   private static array $attrs;
 
-  abstract public static function get(string $key);
-  abstract public static function set(string $key, mixed $val);
+  public static function get(string $key)
+  {
+    return self::$attrs[$key];
+  }
+
+  public static function set(string $key, mixed $val)
+  {
+    self::$attrs[$key] = $val;
+  }
 }

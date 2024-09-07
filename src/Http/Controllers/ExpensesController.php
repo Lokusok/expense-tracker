@@ -16,6 +16,8 @@ class ExpensesController
       return redirect("/login");
     }
 
+    clearFlushMessages(['profile_success_message']);
+
     $searchQuery = '';
     $currentPage = normalize($_GET['page'] ?? '1');
 

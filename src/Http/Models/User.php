@@ -37,7 +37,7 @@ class User
     return false;
   }
 
-  public static function find(string|int $id): array
+  public static function find(string|int $id): array|bool
   {
     $db = DatabaseContainer::get('db');
 
@@ -90,7 +90,7 @@ class User
     return $result;
   }
 
-  public static function update(string $id, array $attrs)
+  public static function update(string|int $id, array $attrs)
   {
     $db = DatabaseContainer::get('db');
 
@@ -118,7 +118,33 @@ class User
     }
   }
 
-  public static function setPasswordRecovering(string $id, array $attrs)
+  public static function setPassword(string|int $id, string $password)
+  {
+    $db = DatabaseContainer::get('db');
+
+    $db->beginTransaction();
+
+    try {
+      $query = "update users
+                set password = :password
+                where id = :id";
+
+      $statement = $db->prepare($query);
+      $statement->execute([
+        ':id' => $id,
+        ':password' => $password
+      ]);
+
+      $db->commit();
+    } catch (\Exception $e) {
+      dd($e);
+      if ($db->inTransaction()) {
+        $db->rollBack();
+      }
+    }
+  }
+
+  public static function setPasswordRecovering(string|int $id, array $attrs)
   {
     $db = DatabaseContainer::get('db');
 
@@ -139,6 +165,7 @@ class User
 
       $db->commit();
     } catch (\Exception $e) {
+      dd($e);
       if ($db->inTransaction()) {
         $db->rollBack();
       }

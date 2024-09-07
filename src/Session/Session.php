@@ -40,6 +40,10 @@ class Session
 
   public static function get(string $key): mixed
   {
+    if (!array_key_exists(self::SESSION_KEY, $_SESSION)) {
+      return false;
+    }
+
     switch ($key) {
       case "id": {
         return $_SESSION[self::SESSION_KEY];
