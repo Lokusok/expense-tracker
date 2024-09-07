@@ -13,6 +13,8 @@
       email: '<?= $user['email'] ?>',
       avatarUrl: '<?= $user['avatar_url'] ?>'
     },
+    isSubmitting: false,
+
     handleAvatarUpload(event) {
       const file = event.target.files.item(0);
       const avatarUrl = URL.createObjectURL(file);
@@ -20,6 +22,11 @@
       this.editData.avatarUrl = avatarUrl;
     },
 
+    handleSubmit() {
+      this.isSubmitting = true;
+    },
+
+    // Модалка восстановления пароля
     isRecoverPasswordConfirmModalVisible: false,
 
     openRecoverPasswordConfirmModal() {
@@ -225,10 +232,12 @@
             <form
               action="/profile/recover-password"
               method="POST"
+              @submit="handleSubmit"
             >
               <button
+                :disabled="isSubmitting"
                 type="submit"
-                class="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
+                class="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto disabled:pointer-events-none disabled:opacity-50"
               >
                 Отправить письмо
               </button>

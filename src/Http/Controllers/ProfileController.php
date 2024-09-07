@@ -39,11 +39,16 @@ class ProfileController
     $email = normalize($_POST['email']);
     $username = normalize($_POST['username']);
 
+    $user = User::find((string)Session::get('id'));
+    $fileName = $user['avatar_url'];
+
     // Достаём и грузим аватарку
-    $fileId = uniqid();
-    $fileName = $fileId . ".jpg";
-    
-    move_uploaded_file($_FILES['avatar']['tmp_name'], ASSETS_IMAGES . "/$fileName");
+    if (isset($_FILES['avatar']) && $_FILES['avatar']['tmp_name'] != "") {
+      $fileId = uniqid();
+      $fileName = $fileId . ".jpg";
+      
+      move_uploaded_file($_FILES['avatar']['tmp_name'], ASSETS_IMAGES . "/$fileName");
+    }
 
     User::update($id, [
       'email' => $email,
