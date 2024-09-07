@@ -92,8 +92,6 @@ class Expense extends BasicModel
 
       $db->commit();
     } catch (\Exception $e) {
-      dd($e);
-
       if ($db->inTransaction()) {
         $db->rollBack();
       }

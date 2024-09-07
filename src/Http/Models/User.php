@@ -111,7 +111,6 @@ class User
 
       $db->commit();
     } catch (\Exception $e) {
-      dd($e);
       if ($db->inTransaction()) {
         $db->rollBack();
       }
@@ -137,7 +136,6 @@ class User
 
       $db->commit();
     } catch (\Exception $e) {
-      dd($e);
       if ($db->inTransaction()) {
         $db->rollBack();
       }
@@ -165,7 +163,6 @@ class User
 
       $db->commit();
     } catch (\Exception $e) {
-      dd($e);
       if ($db->inTransaction()) {
         $db->rollBack();
       }

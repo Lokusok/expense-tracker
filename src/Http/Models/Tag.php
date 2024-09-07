@@ -8,11 +8,6 @@ use App\Containers\Database\DatabaseContainer;
 
 class Tag extends BasicModel
 {
-  public static function create(array $attrs)
-  {
-
-  }
-
   public static function all(): array
   {
     $db = DatabaseContainer::get('db');
