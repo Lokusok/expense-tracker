@@ -87,7 +87,6 @@
     query.delete(name);
 
     window.history.pushState({}, '', `?${query.toString()}`);
-    console.log({ query: query.toString() });
   },
 }">
   <div

@@ -13,9 +13,11 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\ExpensesController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PasswordController;
 
 use App\Containers\Database\DatabaseContainer;
 use App\Containers\Email\EmailContainer;
+
 use PHPMailer\PHPMailer\PHPMailer;
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
@@ -49,10 +51,11 @@ $router->delete("/expenses/delete", [ExpensesController::class, 'destroy']);
 $router->put("/expenses/edit", [ExpensesController::class, 'edit']);
 
 $router->get("/profile", [ProfileController::class, 'index']);
-$router->get("/profile/recover", [ProfileController::class, 'recover']);
 $router->patch("/profile/update", [ProfileController::class, 'update']);
-$router->post("/profile/recover-password", [ProfileController::class, 'recoverPassword']);
-$router->post("/profile/change-password", [ProfileController::class, 'changePassword']);
+
+$router->get("/profile/recover", [PasswordController::class, 'recover']);
+$router->post("/profile/recover-password", [PasswordController::class, 'recoverPassword']);
+$router->post("/profile/change-password", [PasswordController::class, 'changePassword']);
 
 $router->get("/login", [SessionController::class, 'index']);
 $router->post("/login", [SessionController::class, 'login']);

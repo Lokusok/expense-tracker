@@ -43,6 +43,7 @@ class Router
   {
     $isCss = str_ends_with($path, ".css");
     $isImage = str_ends_with($path, ".jpg");
+    $isFavicon = str_ends_with($path, ".ico");
 
     $splittedPath = explode("/", $path);
     $assetName = $splittedPath[count($splittedPath) - 1];
@@ -55,6 +56,12 @@ class Router
 
     if ($isImage) {
       header("Content-Type: image/jpg;");
+      echo file_get_contents(ASSETS_PATH . "/images/$assetName");
+      return;
+    }
+
+    if ($isFavicon) {
+      header("Content-Type: image/ico;");
       echo file_get_contents(ASSETS_PATH . "/images/$assetName");
       return;
     }
